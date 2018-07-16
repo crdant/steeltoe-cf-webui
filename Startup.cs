@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using core_cf_webui.Services;
+
 using Pivotal.Discovery.Client;
 
 namespace core_cf_webui
@@ -37,6 +39,9 @@ namespace core_cf_webui
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddDiscoveryClient(Configuration);
+            
+            services.AddSingleton<IProductService, ProductService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

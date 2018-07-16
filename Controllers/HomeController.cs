@@ -4,14 +4,25 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+
 using core_cf_webui.Models;
+using core_cf_webui.Services ;
 
 namespace core_cf_webui.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        IProductService _products ;
+
+        public HomeController(IProductService products)
         {
+            _products = products;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var result = await _products.ProductListing();
+            ViewData["products"] = result;
             return View();
         }
 
