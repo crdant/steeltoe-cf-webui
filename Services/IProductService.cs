@@ -7,6 +7,6 @@ namespace core_cf_webui.Services
 {
     public interface IProductService
     {
-        Task<string> ProductListing();
+        Task<IEnumerable<Product>> ProductListing();
     }
 }

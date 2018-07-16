@@ -1,6 +1,10 @@
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+
+using Newtonsoft.Json;
+
 using Steeltoe.Common.Discovery;
 
 namespace core_cf_webui.Services
@@ -17,12 +21,13 @@ namespace core_cf_webui.Services
             _logger =  logFactory.CreateLogger<ProductService>();
         }
 
-        public async Task<string> ProductListing()
+        public async Task<IEnumerable<Product>> ProductListing()
         {
             var client = GetClient();
             var result = await client.GetStringAsync(PRODUCT_LISTING_URL);
+
             _logger.LogInformation("ProductList: {0}", result);
-            return result;
+            return JsonConvert.DeserializeObject<Product[]>(result);;
         }
 
         private HttpClient GetClient()

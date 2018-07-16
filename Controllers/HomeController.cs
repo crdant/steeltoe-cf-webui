@@ -12,9 +12,9 @@ namespace core_cf_webui.Controllers
 {
     public class HomeController : Controller
     {
-        IProductService _products ;
+        ProductServiceCommand _products ;
 
-        public HomeController(IProductService products)
+        public HomeController(ProductServiceCommand products)
         {
             _products = products;
         }

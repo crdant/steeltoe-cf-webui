@@ -10,9 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using core_cf_webui.Services;
-
 using Pivotal.Discovery.Client;
+using Steeltoe.CircuitBreaker.Hystrix;
+
+using core_cf_webui.Services;
 
 namespace core_cf_webui
 {
@@ -41,6 +42,8 @@ namespace core_cf_webui
             services.AddDiscoveryClient(Configuration);
             
             services.AddSingleton<IProductService, ProductService>();
+            services.AddHystrixCommand<ProductServiceCommand>("ProductService", Configuration);
+
 
         }
 
