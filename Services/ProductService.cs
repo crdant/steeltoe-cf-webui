@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 
 using Steeltoe.Common.Discovery;
 
+using core_cf_webui.Models; 
+
 namespace core_cf_webui.Services
 {
     public class ProductService : IProductService

@@ -3,6 +3,7 @@ using Steeltoe.CircuitBreaker.Hystrix;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
+using core_cf_webui.Models; 
 
 namespace core_cf_webui.Services
 {
@@ -31,7 +32,7 @@ namespace core_cf_webui.Services
         protected override async Task<IEnumerable<Product>> RunFallbackAsync()
         {
             _logger.LogInformation("RunFallback");
-            return await Task.FromResult<IEnumerable<Product>>( new [] { new Product ( 1973, "Best Selling Product" ) } ) ;
+            return await Task.FromResult<IEnumerable<Product>>( new [] { new Product ( 1973, "Big Green Egg", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBisQzHwJ5nkDYsP-rB6f_6-0W_jo4HJSQGCVE0zBcf4zsVCZb" ) } ) ;
         }
     }
 }
