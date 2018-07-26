@@ -12,6 +12,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Pivotal.Discovery.Client;
 using Steeltoe.CircuitBreaker.Hystrix;
+using Steeltoe.Management.CloudFoundry;
+using Steeltoe.Management.Endpoint.Info;
+using Steeltoe.Management.Endpoint.Metrics;
+using Steeltoe.Management.Exporter.Metrics;
 
 using core_cf_webui.Services;
 
@@ -36,6 +40,13 @@ namespace core_cf_webui
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            // Add managment endpoint services
+            services.AddCloudFoundryActuators(Configuration);
+            // Add management components which collect and forwards metrics to 
+            // the Cloud Foundry Metrics Forwarder service
+            // Remove comments below to enable
+            services.AddMetricsActuator(Configuration);
+            services.AddMetricsForwarderExporter(Configuration);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -59,6 +70,13 @@ namespace core_cf_webui
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            // Add management endpoints into pipeline
+            app.UseCloudFoundryActuators();
+
+
+            // Add metrics collection to the app
+            app.UseMetricsActuator();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
