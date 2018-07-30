@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using core_cf_webui.Models;
-using core_cf_webui.Services ;
+using core_cf_webui.Services;
 
 namespace core_cf_webui.Controllers
 {
@@ -26,6 +24,7 @@ namespace core_cf_webui.Controllers
             return View();
         }
 
+		[Authorize]
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
@@ -33,6 +32,7 @@ namespace core_cf_webui.Controllers
             return View();
         }
 
+		[Authorize(Policy = "group1")]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
@@ -41,6 +41,11 @@ namespace core_cf_webui.Controllers
         }
 
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+		public IActionResult AccessDenied()
         {
             return View();
         }

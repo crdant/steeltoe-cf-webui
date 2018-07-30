@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,9 +8,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Pivotal.Discovery.Client;
 using Steeltoe.CircuitBreaker.Hystrix;
 using Steeltoe.Management.CloudFoundry;
-using Steeltoe.Management.Endpoint.Info;
 using Steeltoe.Management.Endpoint.Metrics;
 using Steeltoe.Management.Exporter.Metrics;
+using Steeltoe.Security.Authentication.CloudFoundry;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 using core_cf_webui.Services;
 
@@ -48,6 +44,18 @@ namespace core_cf_webui
             services.AddMetricsActuator(Configuration);
             services.AddMetricsForwarderExporter(Configuration);
 
+			services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CloudFoundryDefaults.AuthenticationScheme;
+            })
+            .AddCookie((options) =>
+            {
+                           // set values like login url, access denied path, etc here
+                           options.AccessDeniedPath = new PathString("/Home/AccessDenied");
+            })
+            .AddCloudFoundryOAuth(Configuration); // Add Cloud Foundry authentication service
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddDiscoveryClient(Configuration);
@@ -77,6 +85,9 @@ namespace core_cf_webui
 
             // Add metrics collection to the app
             app.UseMetricsActuator();
+
+            //Add Authentication
+            app.UseAuthentication();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

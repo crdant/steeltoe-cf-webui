@@ -2,6 +2,8 @@ using Microsoft.Extensions.Logging;
 using Steeltoe.CircuitBreaker.Hystrix;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+
 
 using core_cf_webui.Models; 
 
@@ -11,11 +13,13 @@ namespace core_cf_webui.Services
     {
         IProductService _ProductService;
         ILogger<ProductServiceCommand> _logger;
+		HttpContext _httpContext;
 
-        public ProductServiceCommand(IHystrixCommandOptions options, IProductService ProductService, ILogger<ProductServiceCommand> logger) : base(options)
+		public ProductServiceCommand(IHystrixCommandOptions options, IProductService ProductService, HttpContext httpContext, ILogger<ProductServiceCommand> logger) : base(options)
         {
             _ProductService = ProductService;
             _logger = logger;
+			_httpContext = httpContext;
             IsFallbackUserDefined = true;
         }
         public async Task<IEnumerable<Product>> ProductListing()
