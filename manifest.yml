@@ -1,9 +1,10 @@
 ---
 applications:
-- name: r1
+- name: core-cf-webui
   random-route: true
   buildpack: dotnet_core_buildpack
   instances: 1
   memory: 256M
   services:
   - steeltoe-demo-registry
+  - steeltoe-demo-sso
