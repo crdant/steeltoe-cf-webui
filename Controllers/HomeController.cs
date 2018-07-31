@@ -19,7 +19,7 @@ namespace core_cf_webui.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var result = await _products.ProductListing();
+			var result = await _products.ProductListing(this.HttpContext);
             ViewData["products"] = result;
             return View();
         }
@@ -32,7 +32,7 @@ namespace core_cf_webui.Controllers
             return View();
         }
 
-		[Authorize(Policy = "group1")]
+		[Authorize]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";

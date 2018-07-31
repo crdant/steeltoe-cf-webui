@@ -17,19 +17,17 @@ namespace core_cf_webui.Services
     {
         DiscoveryHttpClientHandler _handler;
         ILogger<ProductService> _logger;
-		HttpContext _httpContext;
         private const string PRODUCT_LISTING_URL = "https://core-cf-webapi/api/products";
         
-        public ProductService(IDiscoveryClient client, HttpContext httpContext, ILoggerFactory logFactory) 
+        public ProductService(IDiscoveryClient client, ILoggerFactory logFactory) 
         {
             _handler =  new DiscoveryHttpClientHandler(client, logFactory.CreateLogger<DiscoveryHttpClientHandler>());
             _logger =  logFactory.CreateLogger<ProductService>();
-			_httpContext = httpContext;
         }
         
-        public async Task<IEnumerable<Product>> ProductListing()
+		public async Task<IEnumerable<Product>> ProductListing(HttpContext httpContext)
 		{
-			var token = await _httpContext.GetTokenAsync("access_token");
+			var token = await httpContext.GetTokenAsync("access_token");
             var client = GetClient(token);
             
 			var result = await client.GetStringAsync(PRODUCT_LISTING_URL);

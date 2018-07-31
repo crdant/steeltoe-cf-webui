@@ -15,20 +15,20 @@ namespace core_cf_webui.Services
         ILogger<ProductServiceCommand> _logger;
 		HttpContext _httpContext;
 
-		public ProductServiceCommand(IHystrixCommandOptions options, IProductService ProductService, HttpContext httpContext, ILogger<ProductServiceCommand> logger) : base(options)
+		public ProductServiceCommand(IHystrixCommandOptions options, IProductService ProductService, ILogger<ProductServiceCommand> logger) : base(options)
         {
             _ProductService = ProductService;
             _logger = logger;
-			_httpContext = httpContext;
             IsFallbackUserDefined = true;
         }
-        public async Task<IEnumerable<Product>> ProductListing()
+		public async Task<IEnumerable<Product>> ProductListing(HttpContext httpContext)
         {
-            return await ExecuteAsync();
+			_httpContext = httpContext;
+			return await ExecuteAsync();
         }
-        protected override async Task<IEnumerable<Product>> RunAsync()
+		protected override async Task<IEnumerable<Product>> RunAsync()
         {
-            var result = await _ProductService.ProductListing();
+			var result = await _ProductService.ProductListing(_httpContext);
             _logger.LogInformation("Run: {0}", result);
             return result;
         }

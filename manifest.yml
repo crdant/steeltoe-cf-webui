@@ -1,6 +1,6 @@
 ---
 applications:
-- name: core-cf-webui
+- name: r1
   random-route: true
   buildpack: dotnet_core_buildpack
   instances: 1
