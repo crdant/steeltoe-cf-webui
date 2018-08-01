@@ -27,8 +27,9 @@ namespace core_cf_webui.Services
         
 		public async Task<IEnumerable<Product>> ProductListing(HttpContext httpContext)
 		{
-			var token = await httpContext.GetTokenAsync("access_token");
-            var client = GetClient(token);
+			string authHeader = await Task.FromResult(httpContext.Request.Headers["Authorization"]);
+			//var token = await httpContext.GetTokenAsync("access_token");
+            var client = GetClient(authHeader);
             
 			var result = await client.GetStringAsync(PRODUCT_LISTING_URL);
             
@@ -36,11 +37,15 @@ namespace core_cf_webui.Services
             return JsonConvert.DeserializeObject<Product[]>(result);;
         }
 
-		private HttpClient GetClient(string token)
+		private HttpClient GetClient(string authHeader)
         {
            
 			var client = new HttpClient(_handler, false);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+			if (authHeader != null)
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authHeader.Replace("bearer ", string.Empty));
+            }
+            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 			return client;
         }
         

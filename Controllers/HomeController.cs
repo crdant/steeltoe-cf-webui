@@ -17,6 +17,7 @@ namespace core_cf_webui.Controllers
             _products = products;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
 			var result = await _products.ProductListing(this.HttpContext);
@@ -38,6 +39,7 @@ namespace core_cf_webui.Controllers
             ViewData["Message"] = "Your contact page.";
 
             return View();
+		
         }
 
         public IActionResult Privacy()
